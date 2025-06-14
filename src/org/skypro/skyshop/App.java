@@ -6,6 +6,7 @@ import org.skypro.skyshop.product.DiscountedProduct;
 import org.skypro.skyshop.product.FixPriceProduct;
 import org.skypro.skyshop.product.Product;
 import org.skypro.skyshop.product.SimpleProduct;
+import org.skypro.skyshop.searchable.BestResultNotFound;
 import org.skypro.skyshop.searchable.SearchEngine;
 import org.skypro.skyshop.searchable.Searchable;
 
@@ -14,7 +15,6 @@ import java.util.Arrays;
 public class App {
     public static void main(String[] args) {
         System.out.println(">>> Интернет-магазин <<<");
-
 
         ProductBasket basket = new ProductBasket();
 
@@ -64,6 +64,7 @@ public class App {
         engine.add(oranges);
         System.out.println("Добавлен объект - " + oranges.getName());
 
+
         //Пробую осуществить вывод в консоль путем поиска совпадений в цикле
         Searchable[] result = engine.search("ви");
         for (Searchable res : result) {
@@ -75,8 +76,46 @@ public class App {
         //Пробую осуществить вывод в консоль через Arrays.toString
         Searchable[] print = engine.search("дом");
         System.out.println(Arrays.toString(print));
+        System.out.println();
 
+        System.out.println("--- Создание продуктов с заведомо неверными данными ---");
+        try {
+            SimpleProduct carTires = new SimpleProduct("Авторезина", 0);
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
 
+        }
+        try {
+            DiscountedProduct toy = new DiscountedProduct("Игрушка", 200, 101);
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+        }
+
+        try {
+            DiscountedProduct boll = new DiscountedProduct("Мяч", 0, 50);
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+        }
+        System.out.println();
+
+        System.out.println("--- Работа с новым методом ---");
+
+        Searchable[] searchItems = {tv, pc, oranges, banana, home, kiwi};
+        try {
+            Searchable bestMatch = engine.searchBestMatch("ут", searchItems);
+            System.out.println("Лучшее совпадение: " + bestMatch.getStringRepresentation());
+        } catch (BestResultNotFound e) {
+            System.out.println(e.getMessage());
+        }
+
+        try {
+            Searchable bestMatch2 = engine.searchBestMatch("лодка", searchItems);
+            System.out.println("Лучшее совпадение: " + bestMatch2.getStringRepresentation());
+        } catch (BestResultNotFound e) {
+            System.out.println(e.getMessage());
+        }
     }
 
 }
+
+
