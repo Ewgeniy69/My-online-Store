@@ -11,6 +11,7 @@ import org.skypro.skyshop.searchable.SearchEngine;
 import org.skypro.skyshop.searchable.Searchable;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class App {
     public static void main(String[] args) {
@@ -24,7 +25,10 @@ public class App {
         basket.addProduct(kiwi);
         Product oranges = new FixPriceProduct("Апельсины");
         basket.addProduct(oranges);
-        System.out.println();
+        Product gum = new SimpleProduct("Жевательная резинка", 300);
+        Product nachos = new SimpleProduct("Чипсы", 200);
+        Product apple = new SimpleProduct("Яблоко", 70);
+
 
         basket.printBasket();
         System.out.println();
@@ -33,49 +37,38 @@ public class App {
         System.out.println(sum);
         System.out.println();
 
-        basket.emptySpace();
-        System.out.println();
         boolean isFound = basket.searchProduct(oranges);
         System.out.println(isFound);
         System.out.println();
         basket.cleanBasket();
         System.out.println();
         basket.printBasket();
-        System.out.println();
         basket.searchProduct(banana);
+        System.out.println();
 
         System.out.println("--- Поисковые мероприятия ---");
 
-        SearchEngine engine = new SearchEngine(10);
+        SearchEngine engine = new SearchEngine();
 
         Article tv = new Article("Телевизор", "Цветной телевизор, без рамочный, бывший в употреблении");
         engine.add(tv);
-        System.out.println("Добавлен объект - " + tv.getName());
         Article pc = new Article("Ноутбук", "Редкий экземпляр ноутбуков - стоимость 1 миллион долларов");
         engine.add(pc);
-        System.out.println("Добавлен объект - " + pc.getName());
         Article home = new Article("Дом", "Продаю многоквартирный жилой дом по цене однокомнатной квартиры");
         engine.add(home);
-        System.out.println("Добавлен объект - " + home.getName());
         engine.add(banana);
-        System.out.println("Добавлен объект - " + banana.getName());
         engine.add(kiwi);
-        System.out.println("Добавлен объект - " + kiwi.getName());
         engine.add(oranges);
-        System.out.println("Добавлен объект - " + oranges.getName());
-
+        System.out.println();
 
         //Пробую осуществить вывод в консоль путем поиска совпадений в цикле
-        Searchable[] result = engine.search("ви");
+        List<Searchable> result = engine.search("ви");
         for (Searchable res : result) {
             if (res != null) {
                 System.out.println(res.getStringRepresentation());
                 System.out.println(res);
             }
         }
-        //Пробую осуществить вывод в консоль через Arrays.toString
-        Searchable[] print = engine.search("дом");
-        System.out.println(Arrays.toString(print));
         System.out.println();
 
         System.out.println("--- Создание продуктов с заведомо неверными данными ---");
@@ -114,6 +107,25 @@ public class App {
         } catch (BestResultNotFound e) {
             System.out.println(e.getMessage());
         }
+        basket.cleanBasket();
+        System.out.println();
+
+        System.out.println("--- Работа с проектом при измененной структуре данных на Linked");
+        basket.addProduct(banana);
+        basket.addProduct(kiwi);
+        basket.addProduct(oranges);
+        basket.addProduct(gum);
+        basket.addProduct(nachos);
+        basket.addProduct(apple);
+        basket.printBasket();
+
+
+        basket.cleanBasketByName("Бананы");
+        basket.printBasket();
+        basket.cleanBasketByName("Мандарины");
+        basket.printBasket();
+
+
     }
 
 }
