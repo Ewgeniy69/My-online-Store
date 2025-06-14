@@ -10,7 +10,7 @@ import org.skypro.skyshop.searchable.BestResultNotFound;
 import org.skypro.skyshop.searchable.SearchEngine;
 import org.skypro.skyshop.searchable.Searchable;
 
-import java.util.Arrays;
+
 import java.util.List;
 
 public class App {
