@@ -1,34 +1,30 @@
 package org.skypro.skyshop.searchable;
 
+import org.skypro.skyshop.article.Article;
+
+import java.util.LinkedList;
+import java.util.List;
+
 public class SearchEngine {
-    Searchable[] searchElement;
-    int countElement;
+    List<Searchable> searchElement;
 
-
-    public SearchEngine(int size) {
-        this.searchElement = new Searchable[size];
-        this.countElement = 0;
-
+    public SearchEngine() {
+        this.searchElement = new LinkedList<>();
     }
 
     public void add(Searchable element) {
-        if (countElement >= searchElement.length) {
-            throw new IllegalStateException("Достигнута максимальная вместимость");
-        }
-        searchElement[countElement] = element;
-        countElement++;
+        System.out.println("Добавлен новый объект: ");
+        searchElement.add(element);
+        System.out.println(element);
     }
 
 
-    public Searchable[] search(String item) {
+    public List<Searchable> search(String item) {
         System.out.println("Метод поиска");
-        Searchable[] results = new Searchable[5];
-        int foundCount = 0;
-        for (Searchable elements : this.searchElement) {
+        List<Searchable> results = new LinkedList<>();
+        for (Searchable elements : searchElement) {
             if (elements != null && elements.getSearchTerm().contains(item)) {
-                results[foundCount] = elements;
-                foundCount++;
-                if (foundCount == 5) break;
+                results.add(elements);
             }
         }
         return results;
