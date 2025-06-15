@@ -2,15 +2,13 @@ package org.skypro.skyshop.basket;
 
 import org.skypro.skyshop.product.Product;
 
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class ProductBasket {
-    private List<Product> products;
+    private Map<String, List<Product>> products;
 
     public ProductBasket() {
-        this.products = new LinkedList<>();
+        this.products = new HashMap<>();
     }
 
     public void addProduct(Product product) {
@@ -19,15 +17,18 @@ public class ProductBasket {
             System.out.println("Строка - Продукт, не заполнена");
             return;
         }
-        products.add(product);
+        products.computeIfAbsent(product.getName(), k -> new ArrayList<>()).add(product);
         System.out.println("В корзину добавлен продукт: " + product.getName() + ", стоимостью " + product.getPrice() + " руб.");
     }
+
 
     public int getTotalPrice() {
         System.out.println("--- Считаем общую стоимость продуктов в корзине:");
         int total = 0;
-        for (Product product : products) {
-            total += product.getPrice();
+        for (List<Product> p : products.values()) {
+            for (Product product : p) {
+                total += product.getPrice();
+            }
         }
         return total;
     }
@@ -38,8 +39,10 @@ public class ProductBasket {
             System.out.println("В корзине пусто!");
             return;
         }
-        for (Product product : products) {
-            System.out.println(product);
+        for (Map.Entry<String, List<Product>> entry : products.entrySet()) {
+            for (Product product : entry.getValue()) {
+                System.out.println(product);
+            }
         }
     }
 
@@ -49,36 +52,43 @@ public class ProductBasket {
             System.out.println("Строка - Продукт, не заполнена");
             return false;
         }
-        for (Product product1 : products) {
-            if (product1.equals(product)) {
-                System.out.println("Товар " + product.getName() + ", найден в корзине");
-                return true;
+        for (Map.Entry<String, List<Product>> entry : products.entrySet()) {
+            for (Product product1 : entry.getValue()) {
+                if (product1.equals(product)) {
+                    System.out.println("Товар " + product.getName() + ", найден в корзине");
+                    return true;
+                }
             }
         }
         System.out.println("Товар - " + product.getName() + ", в корзине отсутствует");
         return false;
-
     }
 
     public void cleanBasket() {
         System.out.println("--- Удаление продуктов из корзины:");
-        int product = products.size();
+        int count = 0;
+        for (List<Product> clear : products.values()) {
+            count += clear.size();
+        }
         products.clear();
-        System.out.println("Корзина очищена. Удалено " + product + " наименование(я)!");
+        System.out.println("Корзина очищена. Удалено " + count + " наименование(я)!");
     }
 
     public List<Product> cleanBasketByName(String name) {
-        List<Product> removeProduct = new LinkedList<>();
-        if (name == null) {
+        List<Product> removeProduct = new ArrayList<>();
+        if (name == null || name.isEmpty()) {
+            System.out.println("Название товара не указано!");
             return removeProduct;
         }
-        Iterator<Product> iterator = products.iterator();
-        while (iterator.hasNext()) {
-            Product p = iterator.next();
-            if (name.equals(p.getName())) {
-                removeProduct.add(p);
-                iterator.remove();
-                System.out.println("Удалено - " + p);
+        for (Map.Entry<String, List<Product>> entry : products.entrySet()) {
+            Iterator<Product> iterator = entry.getValue().iterator();
+            while (iterator.hasNext()) {
+                Product product = iterator.next();
+                if (name.equals(product.getName())) {
+                    removeProduct.add(product);
+                    iterator.remove();
+                    System.out.println("Удалено - " + product);
+                }
             }
         }
         if (removeProduct.isEmpty()) {
@@ -91,6 +101,7 @@ public class ProductBasket {
 
     }
 }
+
 
 
 
