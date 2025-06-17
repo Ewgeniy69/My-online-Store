@@ -9,9 +9,7 @@ import org.skypro.skyshop.product.SimpleProduct;
 import org.skypro.skyshop.searchable.BestResultNotFound;
 import org.skypro.skyshop.searchable.SearchEngine;
 import org.skypro.skyshop.searchable.Searchable;
-
-
-import java.util.List;
+import java.util.Map;
 
 public class App {
     public static void main(String[] args) {
@@ -46,7 +44,7 @@ public class App {
         basket.searchProduct(banana);
         System.out.println();
 
-        System.out.println("--- Поисковые мероприятия ---");
+        System.out.println("--- Поисковые мероприятия с учетом новой структуры - MAP ---");
 
         SearchEngine engine = new SearchEngine();
 
@@ -61,15 +59,6 @@ public class App {
         engine.add(oranges);
         System.out.println();
 
-        //Пробую осуществить вывод в консоль путем поиска совпадений в цикле
-        List<Searchable> result = engine.search("ви");
-        for (Searchable res : result) {
-            if (res != null) {
-                System.out.println(res.getStringRepresentation());
-                System.out.println(res);
-            }
-        }
-        System.out.println();
 
         System.out.println("--- Создание продуктов с заведомо неверными данными ---");
         try {
@@ -110,7 +99,7 @@ public class App {
         basket.cleanBasket();
         System.out.println();
 
-        System.out.println("--- Работа с проектом при измененной структуре данных на Linked");
+        System.out.println("--- Работа с проектом при измененной структуре данных на MAP");
         basket.addProduct(banana);
         basket.addProduct(kiwi);
         basket.addProduct(oranges);
@@ -125,8 +114,15 @@ public class App {
         basket.cleanBasketByName("Мандарины");
         basket.printBasket();
 
-
+        Map<String, Searchable> result = engine.search("Телевизор");
+        for (Map.Entry<String, Searchable> entry : result.entrySet()) {
+            String name = entry.getKey();
+            Searchable item = entry.getValue();
+            System.out.println("Найден объект - " + name);
+            System.out.println("Информация - " + item.getStringRepresentation());
+        }
     }
+
 
 }
 

@@ -1,32 +1,29 @@
 package org.skypro.skyshop.searchable;
-
-import org.skypro.skyshop.article.Article;
-
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class SearchEngine {
-    List<Searchable> searchElement;
+    Map<String, Searchable> searchElement;
 
     public SearchEngine() {
-        this.searchElement = new LinkedList<>();
+        this.searchElement = new TreeMap<>();
     }
 
     public void add(Searchable element) {
         System.out.println("Добавлен новый объект: ");
-        searchElement.add(element);
+        searchElement.put(element.getSearchTerm(), element);
         System.out.println(element);
     }
 
 
-    public List<Searchable> search(String item) {
+    public Map<String, Searchable> search(String item) {
         System.out.println("Метод поиска");
-        List<Searchable> results = new LinkedList<>();
-        for (Searchable elements : searchElement) {
-            if (elements != null && elements.getSearchTerm().contains(item)) {
-                results.add(elements);
+        Map<String, Searchable> results = new TreeMap<>();
+        for (Map.Entry<String, Searchable> entry : searchElement.entrySet()) {
+            Searchable element = entry.getValue();
+            if (element != null && element.getSearchTerm().contains(item)) {
+                results.put(element.getSearchTerm(), element);
             }
-        }
+                    }
         return results;
 
     }
@@ -58,9 +55,8 @@ public class SearchEngine {
             throw new BestResultNotFound("Ничего не найдено");
         }
         return bestMatch;
-
-
     }
+
 }
 
 
